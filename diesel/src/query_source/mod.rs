@@ -19,6 +19,7 @@ pub use deserialize::Queryable;
 #[cfg(feature = "with-deprecated")]
 #[deprecated(since = "1.1.0", note = "Use `deserialize::QueryableByName` instead")]
 pub use deserialize::QueryableByName;
+use sql_types::SqlField;
 
 /// Represents a type which can appear in the `FROM` clause. Apps should not
 /// need to concern themselves with this trait.
@@ -67,6 +68,9 @@ pub trait Table: QuerySource + AsQuery + Sized {
     fn primary_key(&self) -> Self::PrimaryKey;
     /// Returns a tuple of all columns belonging to this table.
     fn all_columns() -> Self::AllColumns;
+
+    /// okay
+    fn what() -> Vec<SqlField>;
 }
 
 /// Determines how many times `Self` appears in `QS`

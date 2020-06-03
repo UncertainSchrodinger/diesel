@@ -685,6 +685,10 @@ macro_rules! __diesel_table_impl {
                 fn all_columns() -> Self::AllColumns {
                     ($($column_name,)+)
                 }
+
+                fn what() -> Vec<SqlField> {
+                    vec![$($( SqlField::$column_ty($column_sql_name.to_string()) ),*),*]
+                }
             }
 
             impl HasTable for table {

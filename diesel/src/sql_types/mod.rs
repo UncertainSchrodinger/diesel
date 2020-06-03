@@ -13,12 +13,18 @@
 //!
 //! Any backend specific types are re-exported through this module
 
-mod fold;
-pub mod ops;
-mod ord;
+#[cfg(feature = "postgres")]
+pub use pg::types::sql_types::*;
+
+#[cfg(feature = "mysql")]
+pub use mysql::types::*;
 
 pub use self::fold::Foldable;
 pub use self::ord::SqlOrd;
+
+mod fold;
+pub mod ops;
+mod ord;
 
 /// The boolean SQL type.
 ///
@@ -58,6 +64,7 @@ pub struct Bool;
 #[derive(Debug, Clone, Copy, Default, QueryId, SqlType)]
 #[mysql_type = "Tiny"]
 pub struct TinyInt;
+
 #[doc(hidden)]
 pub type Tinyint = TinyInt;
 
@@ -77,6 +84,7 @@ pub type Tinyint = TinyInt;
 #[sqlite_type = "SmallInt"]
 #[mysql_type = "Short"]
 pub struct SmallInt;
+
 #[doc(hidden)]
 pub type Int2 = SmallInt;
 #[doc(hidden)]
@@ -98,6 +106,7 @@ pub type Smallint = SmallInt;
 #[sqlite_type = "Integer"]
 #[mysql_type = "Long"]
 pub struct Integer;
+
 #[doc(hidden)]
 pub type Int4 = Integer;
 
@@ -117,6 +126,7 @@ pub type Int4 = Integer;
 #[sqlite_type = "Long"]
 #[mysql_type = "LongLong"]
 pub struct BigInt;
+
 #[doc(hidden)]
 pub type Int8 = BigInt;
 #[doc(hidden)]
@@ -138,6 +148,7 @@ pub type Bigint = BigInt;
 #[sqlite_type = "Float"]
 #[mysql_type = "Float"]
 pub struct Float;
+
 #[doc(hidden)]
 pub type Float4 = Float;
 
@@ -157,6 +168,7 @@ pub type Float4 = Float;
 #[sqlite_type = "Double"]
 #[mysql_type = "Double"]
 pub struct Double;
+
 #[doc(hidden)]
 pub type Float8 = Double;
 
@@ -355,12 +367,6 @@ pub struct Timestamp;
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Nullable<ST: NotNull>(ST);
 
-#[cfg(feature = "postgres")]
-pub use pg::types::sql_types::*;
-
-#[cfg(feature = "mysql")]
-pub use mysql::types::*;
-
 /// Indicates that a SQL type exists for a backend.
 ///
 /// # Deriving
@@ -406,8 +412,8 @@ pub trait HasSqlType<ST>: TypeMetadata {
     #[doc(hidden)]
     #[cfg(feature = "with-deprecated")]
     #[deprecated(
-        since = "1.4.0",
-        note = "This method is no longer used, and has been deprecated without replacement"
+    since = "1.4.0",
+    note = "This method is no longer used, and has been deprecated without replacement"
     )]
     fn row_metadata(out: &mut Vec<Self::TypeMetadata>, lookup: &Self::MetadataLookup) {
         out.push(Self::metadata(lookup))
@@ -497,3 +503,46 @@ impl<T: NotNull> IntoNullable for Nullable<T> {
 pub trait SingleValue {}
 
 impl<T: NotNull + SingleValue> SingleValue for Nullable<T> {}
+
+/// what
+#[derive(Debug)]
+pub enum SqlField {
+    /// what
+    BigInt(String),
+    /// what
+    Binary(String),
+    /// what
+    Bool(String),
+    /// what
+    Date(String),
+    /// what
+    Double(String),
+    /// what
+    Float(String),
+    /// what
+    Integer(String),
+    /// what
+    Interval(String),
+    /// what
+    Nullable(Box<SqlField>),
+    /// what
+    Numeric(String),
+    /// what
+    SmallInt(String),
+    /// what
+    Text(String),
+    /// what
+    Time(String),
+    /// what
+    Timestamp(String),
+    /// what
+    TinyInt(String),
+    /// what
+    Oid(String),
+    /// what
+    Timestamptz(String),
+    /// what
+    Varchar(String),
+    /// what
+    Int8(String),
+}

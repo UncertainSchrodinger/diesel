@@ -1,6 +1,6 @@
 #![recursion_limit = "1024"]
 // Built-in Lints
-#![deny(warnings, missing_copy_implementations)]
+#![deny(missing_copy_implementations)]
 // Clippy lints
 #![allow(
     clippy::needless_pass_by_value,
